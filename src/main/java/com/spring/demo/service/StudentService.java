@@ -1,5 +1,6 @@
 package com.spring.demo.service;
 
+import com.spring.demo.bean.StudentBean;
 import com.spring.demo.entity.Student;
 
 import java.util.List;
@@ -11,7 +12,9 @@ public interface StudentService {
 
     void delete(Student student);
 
-    List<Student> findAll();
+    List<StudentBean> findAll();
+
+    List<StudentBean> findByClassId(long classId);
 
     Student findById(long id);
 }

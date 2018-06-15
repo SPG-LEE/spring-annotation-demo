@@ -1,5 +1,6 @@
 package com.spring.demo.controller;
 
+import com.spring.demo.bean.StudentBean;
 import com.spring.demo.entity.Class;
 import com.spring.demo.entity.Grade;
 import com.spring.demo.entity.Student;
@@ -40,9 +41,13 @@ public class GradeController {
     public Class findAll(@PathVariable long gradeId, @PathVariable long classId) {
         return classService.findById(classId);
     }
-    @GetMapping("/{gradeId}/class/{classId}/student{studentId}")
+    @GetMapping("/{gradeId}/class/{classId}/student/{studentId}")
     public Student findAll(@PathVariable long gradeId, @PathVariable long classId, @PathVariable long studentId) {
         return studentService.findById(studentId);
+    }
+    @GetMapping("/{gradeId}/class/{classId}/students")
+    public List<StudentBean> findClassStudents(@PathVariable long gradeId, @PathVariable long classId) {
+        return studentService.findByClassId(classId);
     }
     @DeleteMapping("/{gradeId}")
     public void delete(@PathVariable long gradeId) {
