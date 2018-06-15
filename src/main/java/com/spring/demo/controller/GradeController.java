@@ -19,6 +19,7 @@ import java.util.*;
 @RestController
 @RequestMapping("demo/grades")
 @Validated
+@CrossOrigin(allowedHeaders = {"x-access-token"})
 public class GradeController {
     @Autowired
     private GradeService gradeService;
