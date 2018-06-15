@@ -19,6 +19,7 @@ import java.util.*;
 @RestController
 @RequestMapping("demo/grades")
 @Validated
+@CrossOrigin(allowedHeaders = {"x-access-token"})
 public class GradeController {
     @Autowired
     private GradeService gradeService;
@@ -47,6 +48,7 @@ public class GradeController {
     }
     @GetMapping("/{gradeId}/class/{classId}/students")
     public List<StudentBean> findClassStudents(@PathVariable long gradeId, @PathVariable long classId) {
+        System.out.println("0--");
         return studentService.findByClassId(classId);
     }
     @DeleteMapping("/{gradeId}")

@@ -1,0 +1,29 @@
+<html>
+<head>
+    <script
+            src="https://code.jquery.com/jquery-3.3.1.min.js"
+            integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+            crossorigin="anonymous"></script>
+    <script>
+        function testOrign() {
+            $.ajax({
+                url: "http://localhost:8921/demo/grades",
+                type: "GET",
+                headers:{"x-access-token":"1111"},
+                success: function (data) {
+                    console.log(data)
+                },
+                error: function (e) {
+                    console.log(e)
+                }
+            })
+        }
+
+    </script>
+</head>
+<body>
+<input id="data" type="text">
+<button id="sub" onclick="testOrign();">submit</button>
+<input id="value" type="text">
+</body>
+</html>
