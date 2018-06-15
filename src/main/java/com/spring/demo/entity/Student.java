@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.spring.demo.enumerate.EntityStatus;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
@@ -12,6 +13,8 @@ import javax.persistence.*;
 @Table(name = "students")
 @DynamicInsert
 @DynamicUpdate
+@SQLDelete(sql = "update students set entityStatus=" +
+        "'DELETE' where id=?")
 @Where(clause = "exists (select id from classes class left join grades grade on grade.id=class.gradeId where class.id = classId and grade.entityStatus<> 'DELETE'and class.entityStatus<> 'DELETE')")
 public class Student {
     private long id;

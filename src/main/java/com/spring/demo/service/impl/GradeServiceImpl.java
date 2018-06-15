@@ -27,8 +27,7 @@ public class GradeServiceImpl implements GradeService {
 
     @Override
     public void delete(Grade entity) {
-        entity.setEntityStatus(EntityStatus.DELETE);
-        gradeRepository.save(entity);
+        gradeRepository.delete(entity);
     }
 
     @Override

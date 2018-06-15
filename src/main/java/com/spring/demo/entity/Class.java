@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.spring.demo.enumerate.EntityStatus;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import org.springframework.validation.annotation.Validated;
 
@@ -18,6 +19,8 @@ import java.util.Set;
 @Table(name = "classes")
 @DynamicInsert
 @DynamicUpdate
+@SQLDelete(sql = "update classes set entityStatus=" +
+        "'DELETE' where id=?")
 @Where(clause = "exists (select id from grades grade where grade.id = gradeId and grade.entityStatus<> 'DELETE')")
 public class Class {
     private long id;
