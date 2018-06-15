@@ -1,6 +1,8 @@
 package com.spring.demo.service.impl;
 
+import com.spring.demo.bean.StudentBean;
 import com.spring.demo.enumerate.EntityStatus;
+import com.spring.demo.mapper.StudentMapper;
 import com.spring.demo.service.StudentService;
 import com.spring.demo.entity.Student;
 import com.spring.demo.repository.StudentRepository;
@@ -14,6 +16,8 @@ import java.util.Optional;
 public class StudentServiceImpl implements StudentService {
     @Autowired
     private StudentRepository studentRepository;
+    @Autowired
+    private StudentMapper studentMapper;
 
     @Override
     public void save(Student entity) {
@@ -32,8 +36,15 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public List<Student> findAll() {
-        return studentRepository.findAll();
+    public List<StudentBean> findAll() {
+//        return studentRepository.findAll();
+        return studentMapper.findAll();
+    }
+
+    @Override
+    public List<StudentBean> findByClassId(long classId) {
+//        return studentRepository.findAll();
+        return studentMapper.findByClassId(classId);
     }
 
     @Override
