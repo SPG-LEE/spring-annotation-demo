@@ -48,6 +48,7 @@ public class GradeController {
     }
     @GetMapping("/{gradeId}/class/{classId}/students")
     public List<StudentBean> findClassStudents(@PathVariable long gradeId, @PathVariable long classId) {
+        System.out.println("0--");
         return studentService.findByClassId(classId);
     }
     @DeleteMapping("/{gradeId}")
