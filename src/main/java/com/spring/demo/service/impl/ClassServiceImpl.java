@@ -1,10 +1,14 @@
 package com.spring.demo.service.impl;
 
+import com.spring.demo.bean.ServiceResult;
+import com.spring.demo.bean.ServiceResultBuilder;
+import com.spring.demo.controller.search.bean.request.GetClassListRequest;
 import com.spring.demo.enumerate.EntityStatus;
 import com.spring.demo.service.ClassService;
 import com.spring.demo.entity.Class;
 import com.spring.demo.repository.ClassRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -34,6 +38,12 @@ public class ClassServiceImpl implements ClassService {
     @Override
     public List<Class> findAll() {
         return classRepository.findAll();
+    }
+
+    @Override public ServiceResult<List<Class>> findAll(GetClassListRequest getClassListRequest) {
+        List<Class> findClassList = classRepository.findByGradeId(getClassListRequest.getGradeId(), PageRequest.of(getClassListRequest.getPageIndex(), getClassListRequest.getPageSize()));
+        long total = classRepository.countByGradeId(getClassListRequest.getGradeId());
+        return ServiceResultBuilder.buildSuccessResult(findClassList, "123", total);
     }
 
     @Override

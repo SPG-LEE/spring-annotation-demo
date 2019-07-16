@@ -1,10 +1,11 @@
 package com.spring.demo.service.impl;
 
+import com.spring.demo.bean.search.GetRequestBase;
 import com.spring.demo.entity.Grade;
-import com.spring.demo.enumerate.EntityStatus;
 import com.spring.demo.repository.GradeRepository;
 import com.spring.demo.service.GradeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -21,8 +22,8 @@ public class GradeServiceImpl implements GradeService {
     }
 
     @Override
-    public void saveAll(List<Grade> entitys) {
-        gradeRepository.saveAll(entitys);
+    public void saveAll(List<Grade> entities) {
+        gradeRepository.saveAll(entities);
     }
 
     @Override
@@ -33,6 +34,10 @@ public class GradeServiceImpl implements GradeService {
     @Override
     public List<Grade> findAll() {
         return gradeRepository.findAll();
+    }
+
+    @Override public List<Grade> findAll(GetRequestBase getRequestBase) {
+        return gradeRepository.findAll(PageRequest.of(getRequestBase.getPageIndex(), getRequestBase.getPageSize())).getContent();
     }
 
     @Override
