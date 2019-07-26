@@ -1,4 +1,4 @@
-package com.spring.demo.controller;
+package com.spring.demo.controller.demo;
 
 import com.spring.demo.bean.StudentBean;
 import com.spring.demo.entity.Class;
