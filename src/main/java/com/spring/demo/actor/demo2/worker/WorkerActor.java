@@ -1,5 +1,6 @@
 package com.spring.demo.actor.demo2.worker;
 
+import akka.actor.ActorRef;
 import akka.actor.UntypedActor;
 import com.spring.demo.actor.demo2.request.AkkaReq;
 import com.spring.demo.actor.demo2.response.AkkaResp;
@@ -20,13 +21,13 @@ public class WorkerActor extends UntypedActor {
     @Override
     public void onReceive(Object message) throws Exception {
         if (message instanceof AkkaReq) {
-            Response response = requestKnkm((AkkaReq) message);
+            Response response = requestShopSku((AkkaReq) message);
 
             System.out.println("tread:" + Thread.currentThread() + ">>" + this.self().path() + " receive req:" + response.body().string());
             Thread.sleep(2000);
             AkkaResp akkaResp = new AkkaResp(((AkkaReq) message).getData());
             akkaResp.finish();
-            getSender().tell(akkaResp, getSelf());
+            getSender().tell(akkaResp, ActorRef.noSender());
             //getContext().stop(getSelf());
         } else {
             System.out.println("worker unhandled");
@@ -46,6 +47,21 @@ public class WorkerActor extends UntypedActor {
                 .url("http://pds.aiqier.org/rest/orders/4010")
                 .headers(headBuilder.build())
                 .put(body).build();
+        return client.newCall(request).execute();
+    }
+
+    private Response requestShopSku(AkkaReq message) throws IOException {
+        OkHttpClient client = new OkHttpClient.Builder().readTimeout(60, TimeUnit.SECONDS).build();
+        String json = "[{\"shopSku\":\""+ message.getData()+"\",\"platform\":\"AMAZON\"}]";
+        RequestBody body = RequestBody.create(JSON, json);
+        Headers.Builder headBuilder = new Headers.Builder();
+        headBuilder
+                .add("x-access-token","eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiwxNTY0MzY2NjYwMjk5In0.eZv6Hy_bnzzsuuYC1PKdXbaQRhn9ahIqJ_m5KkXFuOy2FyTd3_RA1Xgqd-xWQ_4eFEUN4aCdd14ZWQLCcbr81g")
+                .add("Content-Type","application/json");
+        Request request = new Request.Builder()
+                .url("https://www.angelerp.com/rest/products/items/shopSkus")
+                .headers(headBuilder.build())
+                .post(body).build();
         return client.newCall(request).execute();
     }
 }

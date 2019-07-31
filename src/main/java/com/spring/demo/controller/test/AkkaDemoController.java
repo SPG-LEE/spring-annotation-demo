@@ -35,12 +35,12 @@ public class AkkaDemoController {
         }
     }
 
-    @GetMapping("demo2")
-    public void actorDemo2() {
+    @PostMapping("demo2")
+    public void actorDemo2(@RequestBody List<String> body) {
         ActorRef master = actorSystem.actorOf(SpringExtProvider.get(actorSystem).props("masterActorDemo2"), "masterActorDemo2");
         List<String> data = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
-            data.add("abc" + i);
+        for (int i = 0; i < body.size(); i++) {
+            data.add(body.get(i));
         }
         AkkaListReq akkaListReq = new AkkaListReq(data);
         master.tell(akkaListReq, master);
