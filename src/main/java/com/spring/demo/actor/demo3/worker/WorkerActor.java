@@ -4,7 +4,11 @@ import akka.actor.UntypedActor;
 import com.spring.demo.actor.demo3.request.AkkaReq;
 import com.spring.demo.actor.demo3.response.AkkaResp;
 import com.spring.demo.bean.AppResult;
+import com.spring.demo.entity.Class;
+import com.spring.demo.entity.Student;
 import com.spring.demo.permission.AdminRedisService;
+import com.spring.demo.service.ClassService;
+import com.spring.demo.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -12,22 +16,21 @@ import org.springframework.stereotype.Component;
 @Component("workerActorDemo3")
 @Scope("prototype")
 public class WorkerActor extends UntypedActor {
-
     @Autowired
-    private AdminRedisService adminRedisService;
+    private ClassService classService;
+
     @Override
-    public void onReceive(Object message) throws Exception {
+    public void onReceive(Object message) {
         if (message instanceof AkkaReq) {
 //            System.out.println("tread:" + Thread.currentThread() + ">>" + this.self().path() + " receive req:" + ((AkkaReq) message).getData());
-            AkkaResp akkaResp = new AkkaResp(((AkkaReq) message).getData());
-            Thread.sleep(1000);
-            AppResult<String> valid = adminRedisService.getAdmin(((AkkaReq) message).getData());
-            if (!valid.isSuccess()){
-                System.out.println(valid.getCode());
+            AkkaReq msg = (AkkaReq) message;
 
-            }
-            akkaResp.finish();
-            getSender().tell(akkaResp, getSelf());
+            Student student = msg.getStudent();
+//            Class classDb = classService.findById(student.getClasses().getId());
+//            classDb.setMark(classDb.getMark() + 1);
+//            classService.save(classDb);
+            classService.addMark(student.getClasses().getId(),1);
+//            student.getClasses().setName("22222");
             //getContext().stop(getSelf());
         } else {
             System.out.println("worker unhandled");

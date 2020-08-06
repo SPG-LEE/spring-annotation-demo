@@ -6,6 +6,8 @@ import akka.actor.InvalidActorNameException;
 import com.spring.demo.actor.demo1.request.AkkaReq;
 import com.spring.demo.actor.demo2.request.AkkaListReq;
 import com.spring.demo.actor.demo4.request.AkkaOddReq;
+import com.spring.demo.entity.Student;
+import com.spring.demo.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -46,23 +48,31 @@ public class AkkaDemoController {
         master.tell(akkaListReq, master);
     }
 
+    @Autowired
+    private StudentService studentService;
+
     @GetMapping("demo3")
     public void actorDemo3() {
 
-        ActorRef master = actorSystem.actorOf(SpringExtProvider.get(actorSystem).props("masterActorDemo3"), "masterActorDemo3");
         List<String> data = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < 1000; i++) {
             data.add("abc" + i);
         }
-        com.spring.demo.actor.demo3.request.AkkaListReq akkaListReq = new com.spring.demo.actor.demo3.request.AkkaListReq(data);
-        master.tell(akkaListReq, master);
+        List<Student> students = studentService.findAll(0, 1000);
+        com.spring.demo.actor.demo3.request.AkkaListReq akkaListReq = new com.spring.demo.actor.demo3.request.AkkaListReq(data, new ArrayList<>(students));
+        try {
+            ActorRef master = actorSystem.actorOf(SpringExtProvider.get(actorSystem).props("masterActorDemo3"), "masterActorDemo3");
+            master.tell(akkaListReq, master);
+        } catch (InvalidActorNameException e) {
+            actorSystem.actorSelection("*/masterActorDemo3").tell(akkaListReq, ActorRef.noSender());
+        }
     }
 
     @GetMapping("demo4")
     public void actorDemo4() {
 
         List<AkkaOddReq> data = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 50; i++) {
             data.add(new AkkaOddReq("abc" + i));
         }
 

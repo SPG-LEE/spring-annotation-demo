@@ -2,12 +2,11 @@ package com.spring.demo.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.spring.demo.enumerate.EntityStatus;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
+import org.hibernate.annotations.*;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "students")
@@ -23,6 +22,7 @@ public class Student {
     private EntityStatus entityStatus = EntityStatus.ENABLE;
 
     @ManyToOne
+    @LazyCollection(LazyCollectionOption.TRUE)
     @JoinColumn(name = "classId")
     @JsonIgnoreProperties({"students"})
     public Class getClasses() {
@@ -59,4 +59,5 @@ public class Student {
     public void setEntityStatus(EntityStatus entityStatus) {
         this.entityStatus = entityStatus;
     }
+
 }

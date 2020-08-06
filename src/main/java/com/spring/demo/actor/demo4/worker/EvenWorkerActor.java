@@ -14,9 +14,19 @@ public class EvenWorkerActor extends UntypedActor {
     @Override
     public void onReceive(Object message) throws Exception {
         if (message instanceof AkkaEvenReq) {
-            System.out.println("tread:" + Thread.currentThread() + ">>" + this.self().path() + "evenWorker receive req:" + ((AkkaEvenReq) message).getData());
+            AkkaEvenReq msg = (AkkaEvenReq) message;
+            try {
+                if (msg.getData().equals("abc1")){
+                    throw  new Exception();
+                }
+            }catch (Exception e){
+                ((AkkaEvenReq) message).setData("error");
+                getSelf().tell(message,getSender());
+                return;
+            }
+            System.out.println("tread:" + Thread.currentThread() + ">>" + this.self().path() + "evenWorker receive req:" + msg.getData());
             Thread.sleep(2000);
-            AkkaResp akkaResp = new AkkaResp(((AkkaEvenReq) message).getData());
+            AkkaResp akkaResp = new AkkaResp(msg.getData());
             akkaResp.finish();
             getSender().tell(akkaResp, getSelf());
             //getContext().stop(getSelf());

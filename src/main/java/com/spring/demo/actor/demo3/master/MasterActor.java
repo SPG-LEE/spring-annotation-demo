@@ -27,37 +27,36 @@ public class MasterActor extends UntypedActor {
         this.actorSystem = actorSystem;
     }
 
-
+    private ActorRef route;
+    @Override
+    public void preStart() {
+        route = createActors();
+    }
     @Override
     public void onReceive(Object message) {
         if (message instanceof AkkaListReq) {
             AkkaListReq message1 = (AkkaListReq) message;
             System.out.println("read req:" + message1.getData());
 
-            List<ActorRef> actors = createActors(((AkkaListReq) message).getData().size());
-            actors.stream().parallel().forEach(actorRef -> {
-                actorRef.tell(new AkkaReq(((AkkaListReq) message).read()),self());
-            });
+            AkkaListReq msg = (AkkaListReq) message;
+            do {
+                route.tell(new AkkaReq(msg.readData(), msg.readStudent()), self());
+            } while (msg.hasNext());
         } else if (message instanceof AkkaResp) {
             AkkaResp respMessage = (AkkaResp) message;
             if (respMessage.isFinish()) {
                 System.out.println("resp " + respMessage.getData() + " : " + respMessage.getStatus());
                 unhandled(message);
             }
-        }else {
+        } else {
             System.out.println("master unhandled");
             unhandled(message);
         }
     }
-    private List<ActorRef> createActors(int actorCount) {
-        Props props = SpringExtProvider.get(actorSystem)
-                .props("workerActorDemo3")
-                .withDispatcher("my-dispatcher");
 
-        List<ActorRef> actors = new ArrayList<>(actorCount);
-        for (int i = 0; i < actorCount; i++) {
-            actors.add(actorSystem.actorOf(props,"workerActorDemo3_"+ i));
-        }
-        return actors;
+    private ActorRef createActors() {
+        Props props = SpringExtProvider.get(actorSystem)
+                .props("routeActorDemo3");
+        return actorSystem.actorOf(props, "routeActorDemo3");
     }
 }

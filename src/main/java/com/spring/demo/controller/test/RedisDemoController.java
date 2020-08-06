@@ -57,16 +57,16 @@ public class RedisDemoController {
     @PostMapping("demo3")
     public void actorDemo3(@RequestHeader("x-access-token") String token) {
 
-        List<String> data = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            data.add(token);
-        }
-        com.spring.demo.actor.demo3.request.AkkaListReq akkaListReq = new com.spring.demo.actor.demo3.request.AkkaListReq(data);
-        try {
-            ActorRef master = actorSystem.actorOf(SpringExtProvider.get(actorSystem).props("masterActorDemo3"), "masterActorDemo3");
-            master.tell(akkaListReq, master);
-        } catch (InvalidActorNameException e) {
-            actorSystem.actorSelection("*/masterActorDemo3").tell(akkaListReq, ActorRef.noSender());
-        }
+//        List<String> data = new ArrayList<>();
+//        for (int i = 0; i < 10; i++) {
+//            data.add(token);
+//        }
+//        com.spring.demo.actor.demo3.request.AkkaListReq akkaListReq = new com.spring.demo.actor.demo3.request.AkkaListReq(data);
+//        try {
+//            ActorRef master = actorSystem.actorOf(SpringExtProvider.get(actorSystem).props("masterActorDemo3"), "masterActorDemo3");
+//            master.tell(akkaListReq, master);
+//        } catch (InvalidActorNameException e) {
+//            actorSystem.actorSelection("*/masterActorDemo3").tell(akkaListReq, ActorRef.noSender());
+//        }
     }
 }

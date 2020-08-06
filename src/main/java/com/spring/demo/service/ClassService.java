@@ -13,6 +13,8 @@ public interface ClassService {
 
     void delete(Class entity);
 
+    void addMark(long id, long count);
+
     List<Class> findAll();
 
     ServiceResult<List<Class>> findAll(GetClassListRequest getClassListRequest);

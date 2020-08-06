@@ -4,6 +4,7 @@ import com.spring.demo.bean.ServiceResult;
 import com.spring.demo.bean.ServiceResultBuilder;
 import com.spring.demo.controller.search.bean.request.GetClassListRequest;
 import com.spring.demo.enumerate.EntityStatus;
+import com.spring.demo.mapper.ClassMapper;
 import com.spring.demo.service.ClassService;
 import com.spring.demo.entity.Class;
 import com.spring.demo.repository.ClassRepository;
@@ -33,6 +34,13 @@ public class ClassServiceImpl implements ClassService {
     public void delete(Class entity) {
         entity.setEntityStatus(EntityStatus.DELETE);
         classRepository.save(entity);
+    }
+
+    @Autowired
+    private ClassMapper classMapper;
+
+    @Override public void addMark(long id, long count) {
+        classMapper.addMark(id, count);
     }
 
     @Override

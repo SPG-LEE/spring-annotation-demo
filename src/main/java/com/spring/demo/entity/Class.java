@@ -6,12 +6,8 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
-import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
-import javax.validation.Valid;
-import javax.validation.executable.ExecutableType;
-import javax.validation.executable.ValidateOnExecution;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -25,6 +21,7 @@ import java.util.Set;
 public class Class {
     private long id;
     private String name;
+    private long mark;
     private String number;
     private Set<Student> students = new HashSet<>();
     private Grade grade;
@@ -57,7 +54,7 @@ public class Class {
         this.number = number;
     }
 
-    @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER, mappedBy = "classes")
+    @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY, mappedBy = "classes")
 //    @Where(clause = "entityStatus<> 'DELETE'")
     @OrderBy("id desc")
     public Set<Student> getStudents() {
@@ -86,5 +83,12 @@ public class Class {
 
     public void setEntityStatus(EntityStatus entityStatus) {
         this.entityStatus = entityStatus;
+    }
+    public long getMark() {
+        return mark;
+    }
+
+    public void setMark(long mark) {
+        this.mark = mark;
     }
 }

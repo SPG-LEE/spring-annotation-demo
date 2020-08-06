@@ -17,4 +17,6 @@ public interface GradeService {
     List<Grade> findAll(GetRequestBase getRequestBase);
 
     Grade findById(long id);
+
+    void mergeTest(long gradeId, Grade grade);
 }

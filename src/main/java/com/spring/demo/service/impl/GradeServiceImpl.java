@@ -36,7 +36,8 @@ public class GradeServiceImpl implements GradeService {
         return gradeRepository.findAll();
     }
 
-    @Override public List<Grade> findAll(GetRequestBase getRequestBase) {
+    @Override
+    public List<Grade> findAll(GetRequestBase getRequestBase) {
         return gradeRepository.findAll(PageRequest.of(getRequestBase.getPageIndex(), getRequestBase.getPageSize())).getContent();
     }
 
@@ -47,5 +48,12 @@ public class GradeServiceImpl implements GradeService {
             return byId.get();
         }
         return null;
+    }
+
+    @Override
+    public void mergeTest(long gradeId, Grade grade) {
+        if (grade.getId() != null && grade.getId().longValue() == gradeId){
+            gradeRepository.save(grade);
+        }
     }
 }
