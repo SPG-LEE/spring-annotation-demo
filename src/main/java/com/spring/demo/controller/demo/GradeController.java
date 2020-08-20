@@ -88,36 +88,41 @@ public class GradeController {
     public void init() {
         String[] gradeName = {"一年级", "二年级", "三年级", "四年级", "五年级", "六年级"};
         List<Grade> grades = new ArrayList<>();
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 10000; i++) {
             String[] className = {"一班", "二班", "三班", "四班"};
             Grade singleGrade = new Grade();
-            singleGrade.setName(gradeName[i]);
-            singleGrade.setNumber(gradeName[i]);
+            singleGrade.setName(i / 6 + gradeName[i % 6]);
+            singleGrade.setNumber(i / 6 + gradeName[i % 6]);
             singleGrade.setCreateDateTime(new Timestamp(singleGrade.getCreateDate().getTime()));
-            gradeService.save(singleGrade);
-            Set<Class> classes = new HashSet<>();
-            for (int j = 0; j < 1; j++) {
-                Class singleClass = new Class();
-                singleClass.setName(className[j]);
-                singleClass.setNumber(className[j]);
-                singleClass.setGrade(singleGrade);
-                classService.save(singleClass);
-                Set<Student> students = new HashSet<>();
-                for (int k = 0; k < 1000; k++) {
-                    String[] firstName = {"张", "王", "李", "赵", "马", "刘"};
-                    String[] lastName = {"大", "二", "三", "四", "五", "六"};
-                    Student singleStudent = new Student();
-                    singleStudent.setClasses(singleClass);
-                    singleStudent.setName(firstName[new Random().nextInt(5)] + lastName[new Random().nextInt(5)]);
-                    students.add(singleStudent);
-                }
-                singleClass.setStudents(students);
-                classes.add(singleClass);
-            }
-            singleGrade.setClasses(classes);
+//            gradeService.save(singleGrade);
+//            Set<Class> classes = new HashSet<>();
+//            for (int j = 0; j < 1; j++) {
+//                Class singleClass = new Class();
+//                singleClass.setName(className[j]);
+//                singleClass.setNumber(className[j]);
+//                singleClass.setGrade(singleGrade);
+//                classService.save(singleClass);
+//                Set<Student> students = new HashSet<>();
+//                for (int k = 0; k < 10000; k++) {
+//                    String[] firstName = {"张", "王", "李", "赵", "马", "刘"};
+//                    String[] lastName = {"大", "二", "三", "四", "五", "六"};
+//                    Student singleStudent = new Student();
+//                    singleStudent.setClasses(singleClass);
+//                    singleStudent.setName(firstName[new Random().nextInt(5)] + lastName[new Random().nextInt(5)]);
+//                    students.add(singleStudent);
+//                }
+//                singleClass.setStudents(students);
+//                classes.add(singleClass);
+//            }
+//            singleGrade.setClasses(classes);
             grades.add(singleGrade);
         }
         gradeService.saveAll(grades);
+    }
+
+    @PutMapping("/init")
+    public void initMerge() {
+        gradeService.mergeAll();
     }
 
     @GetMapping("/test/http")
@@ -157,23 +162,23 @@ public class GradeController {
 //            System.out.println(" " + protocols[i]);
 //        }
 
-        Date startDate = DateUtil.parseStr2Date("2020-01-15");
-        Date nextDate = DateUtil.addDaysToDate(startDate,7);
-        Date end = DateUtil.parseStr2Date("2020-01-31");
+        Date startDate = DateUtil.parseStr2Date("2020-03-05");
+        Date nextDate = DateUtil.addDaysToDate(startDate, 7);
+        Date end = DateUtil.parseStr2Date("2020-03-19");
         while (DateUtil.daysBetween(nextDate, DateUtil.getNextDayStartByStart(end)) >= 0) {
             String curDate = DateUtil.dateFormat(startDate, "yyyy-MM-dd HH:mm:ss");
             String curNextDate = DateUtil.dateFormat(nextDate, "yyyy-MM-dd HH:mm:ss");
             startDate = new Date(nextDate.getTime());
-            nextDate = DateUtil.addDaysToDate(nextDate,7);
+            nextDate = DateUtil.addDaysToDate(nextDate, 7);
             System.out.println(curDate + "********" + curNextDate);
         }
     }
 
     @GetMapping("/test/http1")
     public String testHttp1(@RequestParam long shopId) throws IOException, InterruptedException {
-        Date startDate = DateUtil.parseStr2Date("2019-01-01");
-        Date nextDate = DateUtil.addDaysToDate(startDate,7);
-        Date end = DateUtil.parseStr2Date("2019-05-31");
+        Date startDate = DateUtil.parseStr2Date("2018-10-27");
+        Date nextDate = DateUtil.addDaysToDate(startDate, 5);
+        Date end = DateUtil.parseStr2Date("2018-11-10");
         while (DateUtil.daysBetween(nextDate, DateUtil.getNextDayStartByStart(end)) >= 0) {
             String curDate = DateUtil.dateFormat(startDate, "yyyy-MM-dd HH:mm:ss");
             String curNextDate = DateUtil.dateFormat(nextDate, "yyyy-MM-dd HH:mm:ss");
@@ -198,9 +203,9 @@ public class GradeController {
                 System.out.println(s);
                 System.out.println(curDate + "********" + curNextDate);
             }
-            Thread.sleep(2000);
+            Thread.sleep(10000);
             startDate = new Date(nextDate.getTime());
-            nextDate = DateUtil.addDaysToDate(nextDate,7);
+            nextDate = DateUtil.addDaysToDate(nextDate, 5);
         }
         return null;
     }
@@ -208,7 +213,8 @@ public class GradeController {
     @GetMapping("/test/http2")
     public String testHttp2(@RequestParam long shopId) throws IOException, InterruptedException {
         List<String> list = new ArrayList<>();
-        list.add("2020-04-22 00:00:00----------2020-04-23 00:00:00");
+        list.add("2019-03-27 00:00:00----------2019-03-28 00:00:00");
+
         Map<String, String> dateMap = new LinkedHashMap<>();
         for (String s : list) {
             String[] split = s.split("----------");
@@ -238,7 +244,7 @@ public class GradeController {
                 System.out.println(s);
                 System.out.println(curDate + "********" + curNextDate);
             }
-            Thread.sleep(1000);
+            Thread.sleep(30000);
         }
         return null;
     }
@@ -263,8 +269,8 @@ public class GradeController {
                 JSONObject toFinishResult = JSONObject.parseObject(result);
                 JSONArray errorData = toFinishResult.getJSONArray("data");
                 Map<String, String> reasonMap = errorData.stream().collect(Collectors.toMap(key -> ((JSONObject) key).getString("number"), value -> ((JSONObject) value).getString("reason")));
-                reasonMap.keySet().forEach(reason->{
-                    System.out.println(reason+": "+reasonMap.get(reason));
+                reasonMap.keySet().forEach(reason -> {
+                    System.out.println(reason + ": " + reasonMap.get(reason));
                 });
                 System.out.println("***********errorPage:" + pageSize + "************8");
             }

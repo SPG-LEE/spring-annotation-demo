@@ -5,8 +5,10 @@ import com.spring.demo.entity.Grade;
 import com.spring.demo.repository.GradeRepository;
 import com.spring.demo.service.GradeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -42,18 +44,45 @@ public class GradeServiceImpl implements GradeService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Grade findById(long id) {
         Optional<Grade> byId = gradeRepository.findById(id);
         if (byId != null && byId.isPresent()) {
             return byId.get();
         }
+//        try {
+//            Thread.sleep(10000);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
         return null;
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void mergeTest(long gradeId, Grade grade) {
-        if (grade.getId() != null && grade.getId().longValue() == gradeId){
-            gradeRepository.save(grade);
+        Grade gradeDb = new Grade();
+        Optional<Grade> byId = gradeRepository.findById(gradeId);
+        if (byId != null && byId.isPresent()) {
+            gradeDb = byId.get();
         }
+
+        gradeDb.setName(grade.getName());
+        gradeRepository.save(gradeDb);
+        try {
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void mergeAll() {
+        Page<Grade> all = gradeRepository.findAll(PageRequest.of(0, 10000));
+        all.stream().forEach(grade->{
+            grade.setName(System.currentTimeMillis()+"");
+        });
+        gradeRepository.saveAll(all);
+
     }
 }

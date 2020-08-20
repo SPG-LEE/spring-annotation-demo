@@ -19,4 +19,6 @@ public interface GradeService {
     Grade findById(long id);
 
     void mergeTest(long gradeId, Grade grade);
+
+    void mergeAll();
 }
